@@ -1,10 +1,15 @@
 package pkmn;
 
-import java.awt.*;
+import java.io.Serial;
 import java.io.Serializable;
 
+/**
+ * Represents an offensive skill in a card game, detailing its name, description, cost,
+ * and damage.
+ */
 public class AttackSkill implements Serializable {
-    private String name;
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     public AttackSkill() {
     }
@@ -23,6 +28,11 @@ public class AttackSkill implements Serializable {
         this.description = "";
     }
 
+    /**
+     * The name of the attack skill.
+     */
+    private String name;
+
     public String getName() {
         return name;
     }
@@ -30,6 +40,9 @@ public class AttackSkill implements Serializable {
         name = value;
     }
 
+    /**
+     * A brief description of the attack skill.
+     */
     private String description;
 
     public String getDescription() {
@@ -39,6 +52,9 @@ public class AttackSkill implements Serializable {
         description = value;
     }
 
+    /**
+     * The resource expenditure required to use the attack skill.
+     */
     private String cost;
 
     public String getCost() {
@@ -48,6 +64,9 @@ public class AttackSkill implements Serializable {
         cost = value;
     }
 
+    /**
+     * The amount of damage inflicted by the attack skill.
+     */
     private int damage;
 
     public int getDamage() {
@@ -66,9 +85,4 @@ public class AttackSkill implements Serializable {
                 ", damage=" + damage +
                 '}';
     }
-
-//    @Override
-//    public String toString() {
-//        return ""
-//    }
 }

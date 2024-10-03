@@ -1,14 +1,25 @@
 package pkmn;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * Represents a Pokémon card in a trading card game.
+ * This class holds various attributes related to the Pokémon card, including
+ * its stage, name, hp, energy type, evolution information, attack skills, weakness, resistance,
+ * retreat cost, game set, regulation mark, and its owner.
+ */
 public class Card implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * Represents the evolution stage of a Pokémon card.
+     * It can be BASIC, STAGE1, STAGE2, VSTAR, or VMAX.
+     */
     private PokemonStage pokemonStage;
-
-    public Card() {
-    }
-
     public PokemonStage getPokemonStage() {
         return pokemonStage;
     }
@@ -16,6 +27,14 @@ public class Card implements Serializable {
         pokemonStage = value;
     }
 
+
+    public Card() {
+    }
+
+
+    /**
+     * The name of the Pokémon card.
+     */
     private String name;
     public String getName() {
         return name;
@@ -25,6 +44,9 @@ public class Card implements Serializable {
         this.name = name;
     }
 
+    /**
+     * Represents the hp of a Pokémon card.
+     */
     private int hp;
     public int getHp() {
         return hp;
@@ -33,6 +55,11 @@ public class Card implements Serializable {
         hp = value;
     }
 
+    /**
+     * Represents the energy type associated with a Pokémon card.
+     *
+     * @see EnergyType
+     */
     private EnergyType energyType;
     public EnergyType getEnergyType() {
         return energyType;
@@ -41,6 +68,12 @@ public class Card implements Serializable {
         energyType = value;
     }
 
+    /**
+     * Represents the previous evolutionary stage of the current Pokémon.
+     * This variable holds a reference to the Card instance that the current Pokémon
+     * evolves from, if applicable. If the Pokémon is a basic Pokémon or does not have
+     * a previous stage, this will be null.
+     */
     private Card evolvesFrom;
     public Card getEvolvesFrom() {
         return evolvesFrom;
@@ -49,6 +82,9 @@ public class Card implements Serializable {
         evolvesFrom = value;
     }
 
+    /**
+     * A list of attack skills that the card possesses.
+     */
     private List<AttackSkill> skills;
     public List<AttackSkill> getSkills() {
         return skills;
@@ -57,6 +93,10 @@ public class Card implements Serializable {
         skills = values;
     }
 
+    /**
+     * Represents the type of energy this Pokémon card is weak against.
+     * This field indicates which kind of attacks do extra damage to this Pokémon.
+     */
     private EnergyType weaknessType;
     public EnergyType getWeaknessType() {
         return weaknessType;
@@ -65,6 +105,9 @@ public class Card implements Serializable {
         weaknessType = value;
     }
 
+    /**
+     * Represents the type of energy the card has resistance against.
+     */
     private EnergyType resistanceType;
     public EnergyType getResistanceType() {
         return resistanceType;
@@ -73,6 +116,10 @@ public class Card implements Serializable {
         resistanceType = value;
     }
 
+    /**
+     * The cost required for a Pokémon to retreat from battle.
+     * This is typically represented in terms of energy points needed.
+     */
     private String retreatCost;
     public String getRetreatCost() {
         return retreatCost;
@@ -81,6 +128,10 @@ public class Card implements Serializable {
         retreatCost = value;
     }
 
+    /**
+     * The gameSet variable represents the specific set to which a Pokémon card belongs in a collectible card game.
+     * This field is used to categorize and identify the card within the game’s various series and expansions.
+     */
     private String gameSet;
     public String getGameSet() {
         return gameSet;
@@ -89,14 +140,21 @@ public class Card implements Serializable {
         gameSet = value;
     }
 
-    private char regulationMark;
-    public char getRegulationMark() {
+    /**
+     * Represents the regulation mark associated with a Pokémon card.
+     * This mark designates the legal usage period or generation of the card in tournament play.
+     */
+    private Character regulationMark;
+    public Character getRegulationMark() {
         return regulationMark;
     }
-    public void setRegulationMark(char value) {
+    public void setRegulationMark(Character value) {
         regulationMark = value;
     }
 
+    /**
+     * Represents the student who owns the Pokémon card.
+     */
     private Student pokemonOwner;
     public Student getPokemonOwner() {
         return pokemonOwner;
@@ -108,31 +166,31 @@ public class Card implements Serializable {
 
     @Override
     public String toString() {
-        return "1. " + pokemonStage + "\n" +
-                "2. " + name + "\n" +
-                "3. " + hp + "\n" +
-                "4. " + energyType + "\n" +
-                "5. " + evolvesFrom + "\n" +
-                "6. " + skills + "\n" +
-                "7. " + weaknessType + "\n" +
-                "8. " + resistanceType + "\n" +
-                "9. " + retreatCost + "\n" +
-                "10. " + gameSet + "\n" +
-                "11. " + regulationMark + "\n" +
-                "12. " + pokemonOwner;
-//        return "Card{" +
-//                "pokemonStage=" + pokemonStage +
-//                ", name='" + name + '\'' +
-//                ", hp=" + hp +
-//                ", energyType=" + energyType +
-//                ", evolvesFrom=" + evolvesFrom +
-//                ", skills=" + skills +
-//                ", weaknessType=" + weaknessType +
-//                ", resistanceType=" + resistanceType +
-//                ", retreatCost='" + retreatCost + '\'' +
-//                ", gameSet='" + gameSet + '\'' +
-//                ", regulationMark=" + regulationMark +
-//                ", pokemonOwner=" + pokemonOwner +
-//                '}';
+//        return "1. " + pokemonStage + "\n" +
+//                "2. " + name + "\n" +
+//                "3. " + hp + "\n" +
+//                "4. " + energyType + "\n" +
+//                "5. " + evolvesFrom + "\n" +
+//                "6. " + skills + "\n" +
+//                "7. " + weaknessType + "\n" +
+//                "8. " + resistanceType + "\n" +
+//                "9. " + retreatCost + "\n" +
+//                "10. " + gameSet + "\n" +
+//                "11. " + regulationMark + "\n" +
+//                "12. " + pokemonOwner;
+        return "Card{" +
+                "pokemonStage=" + pokemonStage +
+                ", name='" + name + '\'' +
+                ", hp=" + hp +
+                ", energyType=" + energyType +
+                ", evolvesFrom=" + evolvesFrom +
+                ", skills=" + skills +
+                ", weaknessType=" + weaknessType +
+                ", resistanceType=" + resistanceType +
+                ", retreatCost='" + retreatCost + '\'' +
+                ", gameSet='" + gameSet + '\'' +
+                ", regulationMark=" + regulationMark +
+                ", pokemonOwner=" + pokemonOwner +
+                '}';
     }
 }

@@ -1,112 +1,126 @@
 package pkmn;
 
 import java.io.*;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
-public class CardImport {
+public class CardImport extends AbstractFileAction {
 
-    private InputStream getFileAsIOStream(final String fileName)
-    {
-        InputStream ioStream = this.getClass()
-                .getClassLoader()
-                .getResourceAsStream(fileName);
+    /**
+     * Imports a card from a file with the given filename. The file is expected to
+     * contain card information that will be parsed and used to create and populate
+     * a new Card object.
+     *
+     * @param filename The name of the file to import the card data from.
+     * @return The populated Card object created based on the input file content.
+     * @throws IOException If there is an error reading from the file.
+     */
+    public static Card importCardFromFile(String filename) throws IOException {
 
-        if (ioStream == null) {
-            throw new IllegalArgumentException(fileName + " is not found");
-        }
-        return ioStream;
-    }
-
-    public static Card importCardFromFile(String filename) throws IOException, ClassNotFoundException, URISyntaxException {
-//        String url = CardImport.class.getResource(filename).getFile();
-//        Path path = Paths.get(url.toURI());
-//        List<String> lines = Files.readAllLines(path, StandardCharsets.UTF_8);
-//        System.out.println(lines.get(0));
-
-        CardImport instance
-                = new CardImport();
-
-        InputStream is = instance.getFileAsIOStream(filename);
-        instance.printFileContent(is);
-
-        is = instance.getFileAsIOStream(filename);
+        FileInputStream inputStream = new FileInputStream(PATH_TO_RESOURCES + filename);
 
         Card card = new Card();
 
-        try (InputStreamReader isr = new InputStreamReader(is);
-             BufferedReader br = new BufferedReader(isr);)
+        try (InputStreamReader inputStreamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
+             BufferedReader br = new BufferedReader(inputStreamReader))
         {
             String line;
-            while ((line = br.readLine()) != null) {
-                String[] splitted = line.split(" ");
-                switch (splitted[0]) {
-                    case "1.":
-                        card.setPokemonStage(PokemonStage.valueOf(splitted[1]));
-                    case "2.":
-                        card.setName(splitted[1]);
-                    case "3.":
-                        card.setHp(Integer.valueOf(splitted[1]));
-                    case "4.":
-                        card.setEnergyType(EnergyType.valueOf(splitted[1]));
-                    case "5.":
-                        if(!Objects.equals(splitted[1], "")) {
-                            card.setEvolvesFrom(importCardFromFile(splitted[1]));
-                        }
-                    case "6.":
-                        ArrayList<AttackSkill> attackSkills = new ArrayList<AttackSkill>();
-                        if(splitted[1].contains(",")) {
-                            String[] attackSkillsStrings = splitted[1].split(",");
-                            for(String i : attackSkillsStrings) {
-                                String[] skillSplited = i.split("/");
-                                attackSkills.add(new AttackSkill(skillSplited[0], skillSplited[1], Integer.parseInt(skillSplited[2])));
-                            }
-                        }
-                        card.setSkills(attackSkills);
-                    case "7.":
-                        if(!Objects.equals(splitted[1], "")) {
-                            card.setWeaknessType(EnergyType.valueOf(splitted[1]));
-                        } else {
-                            card.setWeaknessType(null);
-                        }
-                    case "8.":
-                        if(!Objects.equals(splitted[1], "")) {
-                            card.setResistanceType(EnergyType.valueOf(splitted[1]));
-                        } else {
-                            card.setResistanceType(null);
-                        }
-                    case "9.":
-                        card.setRetreatCost(splitted[1]);
-                    case "10.":
-                        card.setGameSet(splitted[1]);
-                    case "11.":
-                        card.setRegulationMark(splitted[1].charAt(0));
 
-                }
+            while ((line = br.readLine()) != null) {
+                processLine(line, card);
             }
-            is.close();
         }
 
         return card;
     }
 
-    private void printFileContent(InputStream is) throws IOException
-    {
-        try (InputStreamReader isr = new InputStreamReader(is);
-             BufferedReader br = new BufferedReader(isr);)
-        {
-            String line;
-            while ((line = br.readLine()) != null) {
-                System.out.println(line);
-            }
-            is.close();
+    /**
+     * Processes a single line of the card input file and updates the corresponding fields
+     * of the provided Card object based on the content of the line.
+     *
+     * @param line The input line from the card file, representing a specific attribute of a Card object.
+     * @param card The Card object to update based on the parsed data from the input line.
+     * @throws IOException If there is an error reading from the card file.
+     */
+    private static void processLine(String line, Card card) throws IOException {
+        String[] parts = line.split(" ");
+        switch (parts[0]) {
+            case "1.":
+                try {
+                    card.setPokemonStage(PokemonStage.valueOf(parts[1]));
+                } catch (IllegalArgumentException e) {
+                    card.setPokemonStage(null);
+                }
+                break;
+            case "2.":
+                card.setName(parts[1]);
+                break;
+            case "3.":
+                card.setHp(Integer.parseInt(parts[1]));
+                break;
+            case "4.":
+                card.setEnergyType(EnergyType.valueOf(parts[1]));
+                break;
+            case "5.":
+                if (parts.length == 2 && !parts[1].isEmpty()) {
+                    Card evolvesCard = importCardFromFile(parts[1]);
+                    card.setEvolvesFrom(evolvesCard);
+                }
+                break;
+            case "6.":
+                List<AttackSkill> attackSkills = new ArrayList<>();
+                if (parts[1].contains(",")) {
+                    String[] skills = parts[1].split(",");
+                    for (String skill : skills) {
+                        String[] skillParts = skill.split("/");
+                        attackSkills.add(new AttackSkill(skillParts[1], skillParts[0], Integer.parseInt(skillParts[2])));
+                    }
+                }
+                card.setSkills(attackSkills);
+                break;
+            case "7.":
+                card.setWeaknessType(parts.length == 2 && !parts[1].isEmpty() ? EnergyType.valueOf(parts[1]) : null);
+                break;
+            case "8.":
+                card.setResistanceType(parts.length == 2 && !parts[1].isEmpty() ? EnergyType.valueOf(parts[1]) : null);
+                break;
+            case "9.":
+                card.setRetreatCost(parts[1]);
+                break;
+            case "10.":
+                card.setGameSet(String.join(" ", Arrays.copyOfRange(parts, 1, parts.length)));
+                break;
+            case "11.":
+                card.setRegulationMark(parts.length == 2 && !parts[1].isEmpty() ? parts[1].charAt(0) : null);
+                break;
+            case "12.":
+                if (parts.length == 2) {
+                    String[] ownerInfo = parts[1].split("/");
+                    Student owner = new Student(ownerInfo[1], ownerInfo[0], ownerInfo[2], ownerInfo[3]);
+                    card.setPokemonOwner(owner);
+                } else {
+                    card.setPokemonOwner(null);
+                }
+                break;
         }
+    }
+
+    /**
+     * Deserializes a Card object from a file of bytes based on the given name.
+     *
+     * @param name The name of the file (without the extension) to deserialize the Card object from.
+     * @return The deserialized Card object.
+     * @throws IOException If there is an error reading the file.
+     * @throws ClassNotFoundException If the Card class is not found during deserialization.
+     */
+    public static Card deserializeCardFromBytes(String name) throws IOException, ClassNotFoundException {
+        String path = PATH_TO_RESOURCES + name + ".crd";
+
+        FileInputStream fileInputStream = new FileInputStream(path);
+        ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+
+        return (Card) objectInputStream.readObject();
     }
 }
