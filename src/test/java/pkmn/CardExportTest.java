@@ -2,11 +2,11 @@ package pkmn;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import java.util.ArrayList;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
-class CardImportTest {
+class CardExportTest {
 
     void assertCardFields(Card card) {
         Assertions.assertEquals(card.getEnergyType(), EnergyType.FIRE);
@@ -31,15 +31,22 @@ class CardImportTest {
     }
 
     @Test
-    void importCardFromFile() throws IOException {
+    void serializeToBytes() throws IOException, ClassNotFoundException {
         Card card = CardImport.importCardFromFile("my_card.txt");
+
+        CardExport.serializeToBytes(card);
+        card = CardImport.deserializeCardFromBytes(card.getName());
 
         assertCardFields(card);
     }
 
     @Test
-    void deserializeCardFromBytes() throws IOException, ClassNotFoundException {
-        Card card = CardImport.deserializeCardFromBytes("Pyroar");
+    void testSerializeToBytes() throws IOException, ClassNotFoundException {
+        Card card = CardImport.importCardFromFile("my_card.txt");
+        String name = "name";
+
+        CardExport.serializeToBytes(card, name);
+        card = CardImport.deserializeCardFromBytes(name);
 
         assertCardFields(card);
     }
