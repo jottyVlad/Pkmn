@@ -61,4 +61,14 @@ public class Student implements Serializable {
     public void setGroup(String value) {
         group = value;
     }
+
+    @Override
+    public String toString() {
+        return "Student{" +
+                "firstName='" + firstName + '\'' +
+                ", surName='" + surName + '\'' +
+                ", familyName='" + familyName + '\'' +
+                ", group='" + group + '\'' +
+                '}';
+    }
 }
