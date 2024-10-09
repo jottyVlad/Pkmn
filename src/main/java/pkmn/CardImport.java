@@ -48,11 +48,7 @@ public class CardImport extends AbstractFileAction {
         String[] parts = line.split(" ");
         switch (parts[0]) {
             case "1.":
-                try {
-                    card.setPokemonStage(PokemonStage.valueOf(parts[1]));
-                } catch (IllegalArgumentException e) {
-                    card.setPokemonStage(null);
-                }
+                card.setPokemonStage(PokemonStage.valueOf(parts[1]));
                 break;
             case "2.":
                 card.setName(parts[1]);
@@ -64,9 +60,11 @@ public class CardImport extends AbstractFileAction {
                 card.setEnergyType(EnergyType.valueOf(parts[1]));
                 break;
             case "5.":
-                if (parts.length == 2 && !parts[1].isEmpty()) {
+                if (parts.length == 2 && !parts[1].isEmpty() && !parts[1].equals("-")) {
                     Card evolvesCard = importCardFromFile(parts[1]);
                     card.setEvolvesFrom(evolvesCard);
+                } else {
+                    card.setEvolvesFrom(null);
                 }
                 break;
             case "6.":
@@ -78,19 +76,27 @@ public class CardImport extends AbstractFileAction {
                         attackSkills.add(new AttackSkill(skillParts[1], skillParts[0], Integer.parseInt(skillParts[2])));
                     }
                 }
-                card.setSkills(attackSkills);
+                if(parts[1].equals(" - ")) {
+                    card.setSkills(null);
+                } else {
+                    card.setSkills(attackSkills);
+                }
                 break;
             case "7.":
                 card.setWeaknessType(parts.length == 2 && !parts[1].isEmpty() ? EnergyType.valueOf(parts[1]) : null);
                 break;
             case "8.":
-                card.setResistanceType(parts.length == 2 && !parts[1].isEmpty() ? EnergyType.valueOf(parts[1]) : null);
+                card.setResistanceType(parts.length == 2 && !parts[1].isEmpty() && !parts[1].equals("-") ? EnergyType.valueOf(parts[1]) : null);
                 break;
             case "9.":
-                card.setRetreatCost(parts[1]);
+                card.setRetreatCost(parts.length == 2 && !parts[1].isEmpty() && !parts[1].equals("-") ? parts[1] : null);
                 break;
             case "10.":
-                card.setGameSet(String.join(" ", Arrays.copyOfRange(parts, 1, parts.length)));
+                card.setGameSet(parts.length == 2 &&
+                        !parts[1].isEmpty() &&
+                        !parts[1].equals("-")
+                        ? null
+                        : String.join(" ", Arrays.copyOfRange(parts, 1, parts.length)));
                 break;
             case "11.":
                 card.setRegulationMark(parts.length == 2 && !parts[1].isEmpty() ? parts[1].charAt(0) : null);

@@ -5,7 +5,7 @@
 5. evolves_from.txt
 6. F/Singe/0,2/Overrun/60
 7. WATER
-8.
+8. -
 9. 2
 10. Scarlet & Violet—Paldea Evolved
 11. G
