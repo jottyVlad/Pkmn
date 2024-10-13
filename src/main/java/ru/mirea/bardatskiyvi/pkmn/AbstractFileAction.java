@@ -1,4 +1,4 @@
-package pkmn;
+package ru.mirea.bardatskiyvi.pkmn;
 
 /**
  * Abstract base class for file-related actions.
