@@ -1,4 +1,4 @@
-package pkmn;
+package ru.mirea.bardatskiyvi.pkmn;
 
 import java.io.*;
 

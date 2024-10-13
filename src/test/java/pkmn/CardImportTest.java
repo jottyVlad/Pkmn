@@ -2,6 +2,8 @@ package pkmn;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import ru.mirea.bardatskiyvi.pkmn.*;
+
 import java.util.ArrayList;
 
 import java.io.IOException;
