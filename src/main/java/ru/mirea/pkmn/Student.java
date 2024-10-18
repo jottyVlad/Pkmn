@@ -1,4 +1,4 @@
-package ru.mirea.bardatskiyvi.pkmn;
+package ru.mirea.pkmn;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -64,11 +64,13 @@ public class Student implements Serializable {
 
     @Override
     public String toString() {
-        return "Student{" +
-                "firstName='" + firstName + '\'' +
-                ", surName='" + surName + '\'' +
-                ", familyName='" + familyName + '\'' +
-                ", group='" + group + '\'' +
-                '}';
+//        return "Student{" +
+//                "firstName='" + firstName + '\'' +
+//                ", surName='" + surName + '\'' +
+//                ", familyName='" + familyName + '\'' +
+//                ", group='" + group + '\'' +
+//                '}';
+
+        return surName + " " + firstName + " " + familyName + " " + group;
     }
 }

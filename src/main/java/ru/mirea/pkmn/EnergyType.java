@@ -1,4 +1,4 @@
-package ru.mirea.bardatskiyvi.pkmn;
+package ru.mirea.pkmn;
 
 /**
  * Represents various energy types that can be associated with a card in the context of a card game.

@@ -1,4 +1,4 @@
-package ru.mirea.bardatskiyvi.pkmn;
+package ru.mirea.pkmn;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -78,11 +78,16 @@ public class AttackSkill implements Serializable {
 
     @Override
     public String toString() {
-        return "AttackSkill{" +
-                "name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", cost='" + cost + '\'' +
-                ", damage=" + damage +
-                '}';
+//        return "AttackSkill{" +
+//                "name='" + name + '\'' +
+//                ", description='" + description + '\'' +
+//                ", cost='" + cost + '\'' +
+//                ", damage=" + damage +
+//                '}';
+
+        return "Name: " + name + ", " +
+                "Description: " + (description != null ? description : "no desc") + ", " +
+                "Cost: " + cost + ", " +
+                "Damage: " + damage;
     }
 }

@@ -1,4 +1,6 @@
-package ru.mirea.bardatskiyvi.pkmn;
+package ru.mirea.pkmn.bardatskiyvi;
+
+import ru.mirea.pkmn.*;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -57,7 +59,7 @@ public class CardImport extends AbstractFileAction {
                 card.setHp(Integer.parseInt(parts[1]));
                 break;
             case "4.":
-                card.setEnergyType(EnergyType.valueOf(parts[1]));
+                card.setPokemonType(EnergyType.valueOf(parts[1]));
                 break;
             case "5.":
                 if (parts.length == 2 && !parts[1].isEmpty() && !parts[1].equals("-")) {

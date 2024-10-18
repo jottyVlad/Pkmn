@@ -1,6 +1,10 @@
-package ru.mirea.bardatskiyvi.pkmn;
+package ru.mirea.pkmn.bardatskiyvi;
 
-import java.io.*;
+import ru.mirea.pkmn.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 
 /**
  * The CardExport class provides functionalities for serializing Card objects to byte streams.

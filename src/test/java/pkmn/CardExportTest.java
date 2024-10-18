@@ -2,7 +2,8 @@ package pkmn;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import ru.mirea.bardatskiyvi.pkmn.*;
+import ru.mirea.pkmn.*;
+import ru.mirea.pkmn.bardatskiyvi.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -10,7 +11,7 @@ import java.util.ArrayList;
 class CardExportTest {
 
     void assertCardFields(Card card) {
-        Assertions.assertEquals(card.getEnergyType(), EnergyType.FIRE);
+        Assertions.assertEquals(card.getPokemonType(), EnergyType.FIRE);
         Assertions.assertEquals(card.getName(), "Pyroar");
         Assertions.assertEquals(card.getGameSet(), "Scarlet & Violet—Paldea Evolved");
         Assertions.assertEquals(card.getHp(), 120);

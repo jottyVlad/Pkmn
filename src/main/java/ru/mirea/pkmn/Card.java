@@ -1,4 +1,4 @@
-package ru.mirea.bardatskiyvi.pkmn;
+package ru.mirea.pkmn;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -60,12 +60,12 @@ public class Card implements Serializable {
      *
      * @see EnergyType
      */
-    private EnergyType energyType;
-    public EnergyType getEnergyType() {
-        return energyType;
+    private EnergyType pokemonType;
+    public EnergyType getPokemonType() {
+        return pokemonType;
     }
-    public void setEnergyType(EnergyType value) {
-        energyType = value;
+    public void setPokemonType(EnergyType value) {
+        pokemonType = value;
     }
 
     /**
@@ -144,7 +144,7 @@ public class Card implements Serializable {
      * Represents the regulation mark associated with a Pokémon card.
      * This mark designates the legal usage period or generation of the card in tournament play.
      */
-    private Character regulationMark;
+    private char regulationMark;
     public Character getRegulationMark() {
         return regulationMark;
     }
@@ -178,19 +178,17 @@ public class Card implements Serializable {
 //                "10. " + gameSet + "\n" +
 //                "11. " + regulationMark + "\n" +
 //                "12. " + pokemonOwner;
-        return "Card{" +
-                "pokemonStage=" + pokemonStage +
-                ", name='" + name + '\'' +
-                ", hp=" + hp +
-                ", energyType=" + energyType +
-                ", evolvesFrom=" + evolvesFrom +
-                ", skills=" + skills +
-                ", weaknessType=" + weaknessType +
-                ", resistanceType=" + resistanceType +
-                ", retreatCost='" + retreatCost + '\'' +
-                ", gameSet='" + gameSet + '\'' +
-                ", regulationMark=" + regulationMark +
-                ", pokemonOwner=" + pokemonOwner +
-                '}';
+        return "Stage: " + pokemonStage + '\n' +
+                "Name: " + name + '\n' +
+                "HP: " + hp + '\n' +
+                "Energy Type: " + pokemonType + '\n' +
+                "Evolves from: " + (evolvesFrom != null ? "\n" + evolvesFrom : "none") + "\n\n" +
+                "Skills: " + skills + '\n' +
+                "Weakness type: " + weaknessType + '\n' +
+                "Resistance type: " + resistanceType + '\n' +
+                "Retreat cost: " + retreatCost + '\n' +
+                "Game set: " + gameSet + '\n' +
+                "Regulation mark: " + regulationMark + '\n' +
+                "Pokemon owner: " + (pokemonOwner != null ? pokemonOwner.toString() : "no owner");
     }
 }
