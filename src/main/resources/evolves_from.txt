@@ -1,11 +1,13 @@
 1. BASIC
 2. Litleo
-3. 60
+3. 70
 4. FIRE
 5. -
-6. 2 / Take Down / 30
+6. 1/Blazing Destruction/0,F/Live Coal/10
 7. WATER
 8. -
 9. 2
-10. Sun & Moon—Lost Thunder
-11. -
+10. Scarlet & Violet—Paldea Evolved
+11. C
+12. -
+13. 31

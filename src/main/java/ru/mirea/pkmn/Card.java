@@ -15,6 +15,9 @@ public class Card implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
+    private int tabulation = 0;
+    public int getTabulation() { return tabulation; }
+    public void setTabulation(int value) { tabulation = value; }
     /**
      * Represents the evolution stage of a Pokémon card.
      * It can be BASIC, STAGE1, STAGE2, VSTAR, or VMAX.
@@ -163,6 +166,10 @@ public class Card implements Serializable {
         pokemonOwner = value;
     }
 
+    private String number;
+    public String getNumber() { return number; }
+    public void setNumber(String value) { number = value; }
+
 
     @Override
     public String toString() {
@@ -178,17 +185,18 @@ public class Card implements Serializable {
 //                "10. " + gameSet + "\n" +
 //                "11. " + regulationMark + "\n" +
 //                "12. " + pokemonOwner;
-        return "Stage: " + pokemonStage + '\n' +
-                "Name: " + name + '\n' +
-                "HP: " + hp + '\n' +
-                "Energy Type: " + pokemonType + '\n' +
-                "Evolves from: " + (evolvesFrom != null ? "\n" + evolvesFrom : "none") + "\n\n" +
-                "Skills: " + skills + '\n' +
-                "Weakness type: " + weaknessType + '\n' +
-                "Resistance type: " + resistanceType + '\n' +
-                "Retreat cost: " + retreatCost + '\n' +
-                "Game set: " + gameSet + '\n' +
-                "Regulation mark: " + regulationMark + '\n' +
-                "Pokemon owner: " + (pokemonOwner != null ? pokemonOwner.toString() : "no owner");
+        return "\t".repeat(tabulation) + "Stage: " + pokemonStage + '\n' + "\t".repeat(tabulation) +
+                "Name: " + name + '\n' + "\t".repeat(tabulation) +
+                "HP: " + hp + '\n' + "\t".repeat(tabulation) +
+                "Energy Type: " + pokemonType + '\n' + "\t".repeat(tabulation) +
+                "Evolves from: " + (evolvesFrom != null ? "\n" + evolvesFrom : "none") + '\n' + "\t".repeat(tabulation) +
+                "Skills: " + skills + '\n' + "\t".repeat(tabulation) +
+                "Weakness type: " + weaknessType + '\n' + "\t".repeat(tabulation) +
+                "Resistance type: " + resistanceType + '\n' + "\t".repeat(tabulation) +
+                "Retreat cost: " + retreatCost + '\n' + "\t".repeat(tabulation) +
+                "Game set: " + gameSet + '\n' + "\t".repeat(tabulation) +
+                "Regulation mark: " + regulationMark + '\n' + "\t".repeat(tabulation) +
+                "Pokemon owner: " + (pokemonOwner != null ? pokemonOwner.toString() : "no owner") + '\n' + "\t".repeat(tabulation) +
+                "Number in set: " + number;
     }
 }
