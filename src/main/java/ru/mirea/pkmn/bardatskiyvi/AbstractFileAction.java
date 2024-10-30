@@ -12,5 +12,5 @@ abstract public class AbstractFileAction {
      * This constant is used to define the standard location for resource files
      * within the project structure.
      */
-    static final String PATH_TO_RESOURCES = "src/main/resources/";
+    protected static final String PATH_TO_RESOURCES = "src/main/resources/";
 }

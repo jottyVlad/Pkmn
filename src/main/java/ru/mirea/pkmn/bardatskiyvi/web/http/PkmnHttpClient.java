@@ -14,7 +14,7 @@ public class PkmnHttpClient {
 
     public PkmnHttpClient() {
         client = new Retrofit.Builder()
-                .baseUrl("https://api.pokemontcg.io/v2/")
+                .baseUrl("https://api.pokemontcg.io")
                 .addConverterFactory(JacksonConverterFactory.create(new JsonMapper()))
                 .build();
 
@@ -25,7 +25,6 @@ public class PkmnHttpClient {
         String query = "name:\""+ name + "\"" + " " + "number:" + number;
 
         Response<JsonNode> response = tcgAPI.getPokemon(query).execute();
-
         return response.body();
     }
 }

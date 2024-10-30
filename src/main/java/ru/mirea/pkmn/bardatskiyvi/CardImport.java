@@ -131,10 +131,12 @@ public class CardImport extends AbstractFileAction {
     }
 
     public static Card setDescriptionsFromAPI(Card card, PkmnHttpClient httpClient) throws IOException {
-        if(card.getEvolvesFrom() != null) setDescriptionsFromAPI(card.getEvolvesFrom(), httpClient);
+        if(card.getEvolvesFrom() != null)
+            setDescriptionsFromAPI(card.getEvolvesFrom(), httpClient);
 
+//        System.out.println(card.getName());
+//        System.out.println(card.getNumber());
         JsonNode cardNode = httpClient.getPokemonCard(card.getName(), card.getNumber());
-
 
         Stream<JsonNode> attackStream = cardNode.findValues("attacks")
                 .stream();

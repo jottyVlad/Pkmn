@@ -15,6 +15,8 @@ public class Student implements Serializable {
      */
     private String firstName;
 
+    public Student() {}
+
     public Student(String firstName, String surName, String familyName, String group) {
         this.firstName = firstName;
         this.surName = surName;
