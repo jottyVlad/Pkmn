@@ -14,7 +14,20 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
 
+
+/**
+ * A utility class that provides methods for working with Card objects and database results.
+ */
 public class CardService {
+
+    /**
+     * Creates a Card object from the current row of a ResultSet, retrieving related data from the database.
+     *
+     * @param resultSet The ResultSet containing the card data.
+     * @param db        The DatabaseServiceImpl instance to use for retrieving related data.
+     * @return A Card object populated with data from the ResultSet and related tables.
+     * @throws SQLException If a database access error occurs.
+     */
     public static Card getCardFromResultSet(ResultSet resultSet,
                                             DatabaseServiceImpl db) throws SQLException {
         Card card = new Card();

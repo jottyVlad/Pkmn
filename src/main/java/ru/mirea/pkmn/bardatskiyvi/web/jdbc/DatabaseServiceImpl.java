@@ -16,15 +16,23 @@ import java.util.logging.Logger;
 import static ru.mirea.pkmn.bardatskiyvi.CardService.getCardFromResultSet;
 import static ru.mirea.pkmn.bardatskiyvi.StudentService.resultSetToStudent;
 
+
+/**
+ * This class implements the DatabaseService interface and provides methods for interacting with a database.
+ * It uses JDBC to connect to the database and execute SQL queries.
+ */
 public class DatabaseServiceImpl extends AbstractFileAction implements DatabaseService  {
     private final Connection connection;
 
     private final Properties databaseProperties;
-    private final String PATH_TO_PROPERTIES = PATH_TO_RESOURCES + "database.properties";
+    private final String PATH_TO_PROPERTIES;
 
-    public DatabaseServiceImpl() throws SQLException, IOException {
+
+    public DatabaseServiceImpl(String propertiesFile) throws SQLException, IOException {
 
         databaseProperties = new Properties();
+        PATH_TO_PROPERTIES = PATH_TO_RESOURCES + propertiesFile;
+
         databaseProperties.load(new FileInputStream(PATH_TO_PROPERTIES));
 
         connection = DriverManager.getConnection(
@@ -41,6 +49,14 @@ public class DatabaseServiceImpl extends AbstractFileAction implements DatabaseS
                     "Error connecting to database");
     }
 
+
+    /**
+     * Retrieves a Card object from the database based on its unique identifier (UUID).
+     *
+     * @param uuid The UUID of the card to retrieve.
+     * @return The Card object corresponding to the provided UUID, or null if no such card exists in the database.
+     * @throws SQLException If an error occurs during the database interaction.
+     */
     public Card getCardFromDatabaseById(UUID uuid) throws SQLException {
         String query = "select * from card WHERE \"id\" = ?";
 
@@ -57,6 +73,13 @@ public class DatabaseServiceImpl extends AbstractFileAction implements DatabaseS
         }
     }
 
+    /**
+     * Retrieves a Student object from the database based on their unique identifier (UUID).
+     *
+     * @param uuid The UUID of the student to retrieve.
+     * @return The Student object corresponding to the provided UUID, or null if no such student exists in the database.
+     * @throws SQLException If an error occurs during the database interaction.
+     */
     public Student getStudentFromDatabaseById(UUID uuid) throws SQLException {
         String query = "select * from student WHERE \"id\" = ?";
 
@@ -72,6 +95,14 @@ public class DatabaseServiceImpl extends AbstractFileAction implements DatabaseS
         }
     }
 
+
+    /**
+     * Retrieves a Card object from the database based on its name.
+     *
+     * @param cardName The name of the card to retrieve.
+     * @return The Card object corresponding to the provided name, or null if no such card exists in the database.
+     * @throws SQLException If an error occurs during the database interaction.
+     */
     @Override
     public Card  getCardFromDatabase(String cardName) throws SQLException {
         String query = "select * from card WHERE \"name\" = ?";
@@ -90,8 +121,19 @@ public class DatabaseServiceImpl extends AbstractFileAction implements DatabaseS
         }
     }
 
+
+    /**
+     * Retrieves a Student object from the database based on their full name.
+     * The full name should be provided in the format "Surname FirstName PatronymicName".
+     *
+     * @param studentName The full name of the student to retrieve.
+     * @return The Student object corresponding to the provided name, or null if no such student exists in the database.
+     * @throws SQLException If an error occurs during the database interaction.
+     * @throws IllegalArgumentException If the provided studentName string does not contain exactly three words separated by spaces.
+     */
     @Override
-    public Student getStudentFromDatabase(String studentName) throws SQLException {
+    public Student getStudentFromDatabase(String studentName)
+            throws SQLException, IllegalArgumentException {
         String query = "select * from student where \"familyName\" = ? and" +
                 " \"firstName\" = ? and" +
                 " \"patronicName\" = ?";
@@ -115,6 +157,14 @@ public class DatabaseServiceImpl extends AbstractFileAction implements DatabaseS
         }
     }
 
+
+    /**
+     * Retrieves the unique identifier (UUID) of a card from the database based on its name.
+     *
+     * @param cardName The name of the card to find the UUID for.
+     * @return The UUID of the card corresponding to the provided name.
+     * @throws SQLException If an error occurs during the database interaction.
+     */
     private UUID getCardIdFromDatabase(String cardName) throws SQLException {
         String query = "select * from card WHERE \"name\" = ?";
 
@@ -125,10 +175,20 @@ public class DatabaseServiceImpl extends AbstractFileAction implements DatabaseS
             if(resultSet.next()) {
                 return UUID.fromString(resultSet.getString("id"));
             }
-            throw new IllegalArgumentException("No card with provided name found!");
+            return null;
         }
     }
 
+
+    /**
+     * Retrieves the unique identifier (UUID) of a student from the database based on their full name.
+     * The full name should be provided in the format "Surname FirstName PatronymicName".
+     *
+     * @param studentName The full name of the student to find the UUID for.
+     * @return The UUID of the student corresponding to the provided name, or null if no such student exists in the database.
+     * @throws SQLException If an error occurs during the database interaction.
+     * @throws IllegalArgumentException If the provided studentName string does not contain exactly three words separated by spaces.
+     */
     private UUID getStudentIdFromDatabase(String studentName) throws SQLException {
         String query = "select * from student where \"familyName\" = ? and" +
                 " \"firstName\" = ? and" +
@@ -153,6 +213,16 @@ public class DatabaseServiceImpl extends AbstractFileAction implements DatabaseS
         }
     }
 
+
+    /**
+     * Saves a Card object to the database.
+     * If a card with the same name already exists in the database, the method does nothing.
+     * If the card has an "evolves from" relationship, it ensures that the corresponding card is also present in the database.
+     * If the card has an owner (Student), it ensures that the student is also present in the database.
+     *
+     * @param card The Card object to be saved.
+     * @throws SQLException If an error occurs during the database interaction.
+     */
     @Override
     public void saveCardToDatabase(Card card) throws SQLException {
         if(getCardFromDatabase(card.getName()) != null) {
@@ -222,6 +292,14 @@ public class DatabaseServiceImpl extends AbstractFileAction implements DatabaseS
         }
     }
 
+
+    /**
+     * Creates a new Pokémon owner (Student) in the database.
+     * If a student with the same full name already exists, the method does nothing.
+     *
+     * @param owner The Student object representing the Pokémon owner to be created.
+     * @throws SQLException If an error occurs during the database interaction.
+     */
     @Override
     public void createPokemonOwner(Student owner) throws SQLException {
         if(getStudentIdFromDatabase(owner.getSurName() + " " +

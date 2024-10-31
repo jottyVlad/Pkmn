@@ -130,12 +130,20 @@ public class CardImport extends AbstractFileAction {
         }
     }
 
+
+    /**
+     * Sets the descriptions for each attack skill of a given card and its evolutions (if any)
+     * by fetching data from a Pokemon API using the provided PkmnHttpClient.
+     *
+     * @param card      The Card object for which to set the attack skill descriptions.
+     * @param httpClient The PkmnHttpClient instance to use for making API requests.
+     * @return The Card object with updated attack skill descriptions.
+     * @throws IOException If there is an error communicating with the API or accessing card data.
+     */
     public static Card setDescriptionsFromAPI(Card card, PkmnHttpClient httpClient) throws IOException {
         if(card.getEvolvesFrom() != null)
             setDescriptionsFromAPI(card.getEvolvesFrom(), httpClient);
 
-//        System.out.println(card.getName());
-//        System.out.println(card.getNumber());
         JsonNode cardNode = httpClient.getPokemonCard(card.getName(), card.getNumber());
 
         Stream<JsonNode> attackStream = cardNode.findValues("attacks")
