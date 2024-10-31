@@ -1,12 +1,15 @@
 package ru.mirea.pkmn.bardatskiyvi;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import ru.mirea.pkmn.*;
+import ru.mirea.pkmn.bardatskiyvi.web.http.PkmnHttpClient;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class CardImport extends AbstractFileAction {
 
@@ -64,6 +67,7 @@ public class CardImport extends AbstractFileAction {
             case "5.":
                 if (parts.length == 2 && !parts[1].isEmpty() && !parts[1].equals("-")) {
                     Card evolvesCard = importCardFromFile(parts[1]);
+                    evolvesCard.setTabulation(card.getTabulation() + 1);
                     card.setEvolvesFrom(evolvesCard);
                 } else {
                     card.setEvolvesFrom(null);
@@ -71,6 +75,7 @@ public class CardImport extends AbstractFileAction {
                 break;
             case "6.":
                 List<AttackSkill> attackSkills = new ArrayList<>();
+                parts[1] = String.join(" ", Arrays.copyOfRange(parts, 1, parts.length));
                 if (parts[1].contains(",")) {
                     String[] skills = parts[1].split(",");
                     for (String skill : skills) {
@@ -106,13 +111,61 @@ public class CardImport extends AbstractFileAction {
             case "12.":
                 if (parts.length == 2) {
                     String[] ownerInfo = parts[1].split("/");
-                    Student owner = new Student(ownerInfo[1], ownerInfo[0], ownerInfo[2], ownerInfo[3]);
-                    card.setPokemonOwner(owner);
+                    if(ownerInfo.length == 4) {
+                        Student owner = new Student(ownerInfo[1], ownerInfo[0], ownerInfo[2], ownerInfo[3]);
+                        card.setPokemonOwner(owner);
+                    } else {
+                        card.setPokemonOwner(null);
+                    }
                 } else {
                     card.setPokemonOwner(null);
                 }
                 break;
+            case "13.":
+                if(parts.length == 2) {
+                    card.setNumber(parts[1]);
+                } else {
+                    card.setNumber(null);
+                }
         }
+    }
+
+
+    /**
+     * Sets the descriptions for each attack skill of a given card and its evolutions (if any)
+     * by fetching data from a Pokemon API using the provided PkmnHttpClient.
+     *
+     * @param card      The Card object for which to set the attack skill descriptions.
+     * @param httpClient The PkmnHttpClient instance to use for making API requests.
+     * @return The Card object with updated attack skill descriptions.
+     * @throws IOException If there is an error communicating with the API or accessing card data.
+     */
+    public static Card setDescriptionsFromAPI(Card card, PkmnHttpClient httpClient) throws IOException {
+        if(card.getEvolvesFrom() != null)
+            setDescriptionsFromAPI(card.getEvolvesFrom(), httpClient);
+
+        JsonNode cardNode = httpClient.getPokemonCard(card.getName(), card.getNumber());
+
+        Stream<JsonNode> attackStream = cardNode.findValues("attacks")
+                .stream();
+        JsonNode attacks = attackStream.toList().getFirst();
+        attackStream.close();
+
+        for(JsonNode attack : attacks) {
+            card = CardImport.updateSkillDescription(card,
+                    attack.findValue("name").asText(),
+                    attack.findValue("text").asText());
+        }
+        return card;
+    }
+
+    public static Card updateSkillDescription(Card card, String skillName, String description) {
+        for(AttackSkill skill : card.getSkills()) {
+            if(skill.getName().equals(skillName)) {
+                card.getSkills().get(card.getSkills().indexOf(skill)).setDescription(description);
+            }
+        }
+        return card;
     }
 
     /**
@@ -129,6 +182,9 @@ public class CardImport extends AbstractFileAction {
         FileInputStream fileInputStream = new FileInputStream(path);
         ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
 
-        return (Card) objectInputStream.readObject();
+        Card card = (Card)objectInputStream.readObject();
+        fileInputStream.close();
+        objectInputStream.close();
+        return card;
     }
 }

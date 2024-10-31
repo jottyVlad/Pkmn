@@ -2,6 +2,9 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+!**/src/main/java/resources/database.properties
+!**/src/main/java/resources/database_test.properties
+
 
 ### IntelliJ IDEA ###
 .idea/modules.xml

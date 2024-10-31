@@ -85,9 +85,9 @@ public class AttackSkill implements Serializable {
 //                ", damage=" + damage +
 //                '}';
 
-        return "Name: " + name + ", " +
+        return "{ Name: " + name + ", " +
                 "Description: " + (description != null ? description : "no desc") + ", " +
                 "Cost: " + cost + ", " +
-                "Damage: " + damage;
+                "Damage: " + damage + " }";
     }
 }
