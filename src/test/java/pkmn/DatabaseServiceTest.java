@@ -13,11 +13,12 @@ import java.util.UUID;
 
 public class DatabaseServiceTest {
 
-    DatabaseServiceImpl db = new DatabaseServiceBuilder()
-            .setPropertiesFile("database_test.properties")
-            .buildDatabaseService();
+    DatabaseServiceImpl db;
 
     public DatabaseServiceTest() throws SQLException, IOException {
+        this.db = new DatabaseServiceBuilder()
+                .setPropertiesFile("database_test.properties")
+                .buildDatabaseService();
     }
 
     @Test
