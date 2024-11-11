@@ -13,7 +13,6 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static ru.mirea.pkmn.bardatskiyvi.CardService.getCardFromResultSet;
 import static ru.mirea.pkmn.bardatskiyvi.StudentService.resultSetToStudent;
 
 
@@ -54,22 +53,16 @@ public class DatabaseServiceImpl extends AbstractFileAction implements DatabaseS
      * Retrieves a Card object from the database based on its unique identifier (UUID).
      *
      * @param uuid The UUID of the card to retrieve.
-     * @return The Card object corresponding to the provided UUID, or null if no such card exists in the database.
+     * @return The ResultSet of Card object corresponding to the provided UUID, or null if no such card exists in the database.
      * @throws SQLException If an error occurs during the database interaction.
      */
-    public Card getCardFromDatabaseById(UUID uuid) throws SQLException {
+    @Override
+    public ResultSet getCardFromDatabaseById(UUID uuid) throws SQLException {
         String query = "select * from card WHERE \"id\" = ?";
 
         try(PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setObject(1, uuid);
-            ResultSet resultSet = statement.executeQuery();
-
-            if(resultSet.next())
-            {
-                Card card = getCardFromResultSet(resultSet, this);
-                return card;
-            }
-            else return null;
+            return statement.executeQuery();
         }
     }
 
@@ -80,44 +73,31 @@ public class DatabaseServiceImpl extends AbstractFileAction implements DatabaseS
      * @return The Student object corresponding to the provided UUID, or null if no such student exists in the database.
      * @throws SQLException If an error occurs during the database interaction.
      */
-    public Student getStudentFromDatabaseById(UUID uuid) throws SQLException {
+    @Override
+    public ResultSet getStudentFromDatabaseById(UUID uuid) throws SQLException {
         String query = "select * from student WHERE \"id\" = ?";
 
         try(PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setObject(1, uuid);
-            ResultSet resultSet = statement.executeQuery();
-
-            if(resultSet.next())
-            {
-                return resultSetToStudent(resultSet);
-            }
-            else return null;
+            return statement.executeQuery();
         }
     }
 
 
     /**
-     * Retrieves a Card object from the database based on its name.
+     * Retrieves a ResultSet of Card object from the database based on its name.
      *
      * @param cardName The name of the card to retrieve.
-     * @return The Card object corresponding to the provided name, or null if no such card exists in the database.
+     * @return The ResultSet of Card object corresponding to the provided name, or null if no such card exists in the database.
      * @throws SQLException If an error occurs during the database interaction.
      */
     @Override
-    public Card  getCardFromDatabase(String cardName) throws SQLException {
+    public ResultSet getCardFromDatabase(String cardName) throws SQLException {
         String query = "select * from card WHERE \"name\" = ?";
 
         try(PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, cardName);
-            ResultSet resultSet = statement.executeQuery();
-
-            if(resultSet.next())
-            {
-                Card card = getCardFromResultSet(resultSet, this);
-                statement.close();
-                return card;
-            }
-            else return null;
+            return statement.executeQuery();
         }
     }
 
@@ -270,19 +250,8 @@ public class DatabaseServiceImpl extends AbstractFileAction implements DatabaseS
             statement.setObject(6, ownerId);
             statement.setString(7, card.getPokemonStage().name());
             statement.setString(8, card.getRetreatCost());
-
-            if(card.getWeaknessType() != null) {
-                statement.setString(9, card.getWeaknessType().name());
-            } else {
-                statement.setString(9, null);
-            }
-
-            if(card.getResistanceType() != null) {
-                statement.setString(10, card.getResistanceType().name());
-            } else {
-                statement.setString(10, null);
-            }
-
+            statement.setString(9, card.getWeaknessType() != null ? card.getWeaknessType().name() : null);
+            statement.setString(10, card.getResistanceType() != null ? card.getResistanceType().name() : null);
             statement.setString(11, new Gson().toJson(card.getSkills()));
             statement.setString(12, card.getPokemonType().name());
             statement.setString(13, String.valueOf(card.getRegulationMark()));
